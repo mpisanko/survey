@@ -1,20 +1,23 @@
 defmodule Survey.Providers.Cli do
+  alias Survey.Providers.Provider
+  @behaviour Provider
 
   @flags [survey: :string, response: :string]
 
-  def parse_and_validate(args) do
+  def data(args) do
     args
-    |> parser
-    |> validate!
+    |> parse_and_validate!
     |> IO.inspect
   end
 
-  def validate!({flags, _, _}) do
-    flags |> validate_flags! |> validate_files!
+  def parse_and_validate!(args) do
+    args
+    |> OptionParser.parse(strict: @flags)
+    |> validate!
   end
 
-  def parser(args) do
-    OptionParser.parse(args, strict: @flags)
+  defp validate!({flags, _, _}) do
+    flags |> validate_flags! |> validate_files!
   end
 
   defp validate_flags!(flags) do
