@@ -1,14 +1,20 @@
 defmodule Survey do
 
+  @flags [survey: :string, response: :string]
   def main(args \\ []) do
     args
-    |> OptionParser.parse(strict: [survey: :string, response: :string])
+    |> OptionParser.parse(strict: @flags)
     |> IO.inspect
     |> validate!
   end
 
   defp validate!({flags, _, _}) do
-    if (flags |> Keyword.keys |> Enum.sort == [survey: :string, response: :string] |> Keyword.keys |> Enum.sort) do
+    if (flags |> Keyword.keys |> Enum.sort == @flags |> Keyword.keys |> Enum.sort) do
+      if (flags |> Keyword.values |> Enum.all?(&match?({:ok,_}, File.stat(&1)))) do
+        flags
+      else
+        raise ArgumentError, ~s[File(s) do not exist: #{flags|>Keyword.values|>Enum.reject(&match?({:ok,_},File.stat(&1)))}]
+      end
       flags
     else
       raise ArgumentError, "Please specify --survey and --response with paths pointing to respective files."
