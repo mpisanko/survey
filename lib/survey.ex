@@ -1,11 +1,12 @@
 defmodule Survey do
 
   @flags [survey: :string, response: :string]
+
   def main(args \\ []) do
     args
     |> OptionParser.parse(strict: @flags)
-    |> IO.inspect
     |> validate!
+    |> IO.inspect
   end
 
   defp validate!({flags, _, _}) do
@@ -26,6 +27,5 @@ defmodule Survey do
     else
       raise ArgumentError, ~s[File(s) do not exist: #{flags|>Keyword.values|>Enum.reject(&match?({:ok,_},File.stat(&1)))}]
     end
-    
   end
 end
