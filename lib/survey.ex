@@ -1,0 +1,2 @@
+defmodule Survey do
+end
