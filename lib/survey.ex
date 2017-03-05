@@ -10,6 +10,7 @@ defmodule Survey do
   defp validate!({flags, _, _}) do
     case flags do
       [response: r, survey: s] -> flags
+      [survey: s, response: r] -> flags
       _ -> raise ArgumentError, "Please specify --survey and --response with paths pointing to respective files."
     end
   end

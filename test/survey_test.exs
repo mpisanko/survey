@@ -7,6 +7,10 @@ defmodule SurveyTest do
       assert Survey.main(["--response", "foo", "--survey", "bar"]) == [response: "foo", survey: "bar"]
     end
 
+    test "it requires precisely two arguments - in any order" do
+      assert Survey.main(["--survey", "bar", "--response", "foo"]) == [survey: "bar", response: "foo"]
+    end
+
     test "it raises if required flags are not present" do
       assert_raise ArgumentError, fn ->
         Survey.main(["foo", "bar"])
