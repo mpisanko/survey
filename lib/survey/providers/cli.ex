@@ -7,7 +7,8 @@ defmodule Survey.Providers.Cli do
   def data(args) do
     args
     |> parse_and_validate!
-    |> IO.inspect
+    |> read_from_csv
+    |> create_struct
   end
 
   def parse_and_validate!(args) do
@@ -15,6 +16,51 @@ defmodule Survey.Providers.Cli do
     |> OptionParser.parse(strict: @flags)
     |> validate!
   end
+
+  defp read_from_csv(inputs) do
+    inputs
+    |> Enum.map(fn({k, v}) -> {k, v |> File.stream! |> CSV.decode |> Enum.to_list} end)
+    |> Enum.into(%{})
+  end
+
+  defp create_struct(%{survey: [h | qs], response: rs}) do
+    headers = Enum.map(h, &String.to_atom/1)
+    questions = qs |> Enum.map(&create_question(&1, headers))
+    q_types = Enum.map(questions, &Map.get(&1, :type) |> String.to_atom)
+    responses = Enum.map(rs, &create_response(&1, q_types))
+    %Survey{survey: questions, response: responses}
+  end
+
+  def create_question(q, headers) do
+    Enum.zip(headers, q) |> Enum.into(%{})
+  end
+
+  @response_fields [:email, :employee_id, :submitted_at]
+  def create_response(r, qs) do
+    r = Enum.map(r, &nilify/1)
+   fixed_fields = Enum.zip(@response_fields, Enum.take(r, 3)) |> Enum.into(%{})
+   responses =
+     r
+     |> Enum.drop(3)
+     |> Enum.zip(qs)
+     |> Enum.map(&eval_question/1)
+   Map.merge(fixed_fields, %{responses: responses})
+  end
+
+  defp nilify(""), do: nil
+  defp nilify("" <> v), do: v
+
+  defp eval_question({nil, :ratingquestion}), do: {nil, :ratingquestion}
+  defp eval_question({num, :ratingquestion}) do
+    {
+      case Integer.parse(num) do
+        :error -> :error
+        {n, _} -> n
+      end,
+      :ratingquestion
+    }
+  end
+  defp eval_question(q), do: q
 
   defp validate!({flags, _, _}) do
     flags |> validate_flags! |> validate_files!

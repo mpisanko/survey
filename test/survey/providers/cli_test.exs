@@ -28,4 +28,13 @@ defmodule Survey.Providers.CliTest do
       assert Cli.parse_and_validate!(~w[--response ./README.md --survey ./mix.exs --extra-args not-welcome]) == [response: "./README.md", survey: "./mix.exs"]
     end
   end
+
+  describe "data" do
+    test "creates struct from CSV files given as arguments" do
+      assert %Survey{survey: survey, response: response} =  Cli.data(~w[--response test/fixtures/survey-1-responses.csv --survey test/fixtures/survey-1.csv])
+      # assert Enum.count(survey)  == System.cmd("wc", ~w[-l test/fixtures/survey-1.csv]) |> elem(0) |> String.strip |> String.split |> hd |> Integer.parse |> elem(0)
+      assert Enum.count(survey) == 5
+      assert Enum.count(response) == 6
+    end
+  end
 end
