@@ -5,7 +5,7 @@ defmodule Survey do
 
   def main(args \\ []) do
     args
-    |> Cli.parse_and_validate!
+    |> Cli.data
     |> IO.inspect
   end
 
