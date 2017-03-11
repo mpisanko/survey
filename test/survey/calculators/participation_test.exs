@@ -9,12 +9,12 @@ defmodule Survey.Calculators.ParticipationTest do
               %{submitted_at: nil},
               %{submitted_at: "2014-07-29T23:35:41+00:00"},
               %{submitted_at: nil}]
-      assert Participation.calculate(%Survey{survey: [], response: resp}) == %{type: :participation, result: 0.5, participants: 2, total: 4}
+      assert Participation.calculate(%Survey{survey: [], response: resp}) == %{type: :participation, result: %{percent: 50, participants: 2, total: 4}}
     end
 
     test "handles invalid input" do
       resp = []
-      assert Participation.calculate(%Survey{survey: [], response: resp}) == %{type: :participation, result: :error, participants: 0, total: 0}
+      assert Participation.calculate(%Survey{survey: [], response: resp}) == %{type: :participation, result: %{percent: 0, participants: 0, total: 0}}
     end
   end
 
