@@ -7,6 +7,7 @@ defmodule Survey.Mixfile do
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     escript: escript,
      deps: deps()]
   end
 
@@ -31,4 +32,10 @@ defmodule Survey.Mixfile do
       {:csv, "~> 1.4.2"}
     ]
   end
+
+  def escript do
+    [main_module: Survey,
+    path: "bin/survey"]
+  end
+
 end
