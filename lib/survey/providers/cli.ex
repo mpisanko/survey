@@ -6,15 +6,54 @@ defmodule Survey.Providers.Cli do
 
   def data(args) do
     args
-    |> parse_and_validate!
+    |> parse_and_validate
     |> read_from_csv
     |> create_struct
   end
 
-  def parse_and_validate!(args) do
+  def parse_and_validate(args) do
+    with {:ok, flags} <- (args |> parse_options |> validate_options) do
+      flags
+    else
+      {:error, :badarg} ->
+        error("Please specify --survey and --response with paths pointing to respective files")
+      {:error, :missing_files, files} ->
+        error("The following files do not exist: #{files}")
+    end
+  end
+
+  defp parse_options(args) do
     args
     |> OptionParser.parse(strict: @flags)
-    |> validate!
+  end
+
+  defp validate_options({options, _, _}) do
+    options |> validate_flags |> validate_files
+  end
+
+  defp validate_flags(flags) do
+    if (flags |> Keyword.keys |> Enum.sort == @flags |> Keyword.keys |> Enum.sort) do
+      {:ok, flags}
+    else
+      {:error, :badarg}
+    end
+  end
+
+  defp validate_files({:ok, flags}) do
+    missing_files = flags |> Keyword.values |> Enum.reject(&File.exists?/1)
+    case missing_files do
+      [] -> {:ok, flags}
+      missing -> {:error, :missing_files, missing |> Enum.join(", ")}
+    end
+  end
+
+  defp validate_files({:error, reason}) do
+    {:error, reason}
+  end
+
+  defp error(message) do
+    IO.ANSI.format([:red, message], true)
+    exit({:shutdown, message})
   end
 
   defp read_from_csv(inputs) do
@@ -60,23 +99,4 @@ defmodule Survey.Providers.Cli do
   end
   defp eval_question({v, _}), do: v
 
-  defp validate!({flags, _, _}) do
-    flags |> validate_flags! |> validate_files!
-  end
-
-  defp validate_flags!(flags) do
-    if (flags |> Keyword.keys |> Enum.sort == @flags |> Keyword.keys |> Enum.sort) do
-      flags
-    else
-      raise ArgumentError, "Please specify --survey and --response with paths pointing to respective files."
-    end
-  end
-
-  defp validate_files!(flags) do
-    if (flags |> Keyword.values |> Enum.all?(&match?({:ok,_}, File.stat(&1)))) do
-      flags
-    else
-      raise ArgumentError, ~s[File(s) do not exist: #{flags|>Keyword.values|>Enum.reject(&match?({:ok,_},File.stat(&1)))}]
-    end
-  end
 end
