@@ -1,6 +1,4 @@
 defmodule Survey.Providers.Cli do
-  alias Survey.Providers.Provider
-  @behaviour Provider
 
   @flags [survey: :string, response: :string]
 
