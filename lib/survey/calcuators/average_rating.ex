@@ -17,9 +17,7 @@ defmodule Survey.Calculators.AverageRating do
   end
 
   def calculate_average(%{responses: rs}) do
-    rs
-    |> Enum.reduce(&+/2)
-    |> Kernel./(Enum.count(rs))
+    Enum.sum(rs) / Enum.count(rs)
   end
 
 end
