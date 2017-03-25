@@ -22,7 +22,7 @@ defmodule Survey.Providers.Cli do
   end
 
   def create_question(q, headers) do
-    Enum.zip(headers, q) |> Enum.into(%{}) |> Map.update(:type, :missing, &String.to_atom/1)
+    Enum.zip(headers, q) |> Enum.into(%{})
   end
 
   @response_fields [:email, :employee_id, :submitted_at]

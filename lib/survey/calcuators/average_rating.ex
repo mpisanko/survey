@@ -7,7 +7,7 @@ defmodule Survey.Calculators.AverageRating do
     rs
     |> Calculator.submitted
     |> Calculator.questions_with_responses(qs)
-    |> Calculator.questions_of_type(:ratingquestion)
+    |> Calculator.questions_of_type("ratingquestion")
     |> Enum.map(fn q -> q |> Map.merge(%{average: calculate_average(q)}) end)
     |> results
   end

@@ -10,12 +10,6 @@ defmodule Survey.Providers.CliTest do
       assert Enum.count(response) == 6
     end
 
-    test "converts question types to symbols" do
-      [survey, _response] = read_in_survey(1)
-      survey
-      |> Enum.each(fn q -> assert is_atom(Map.get(q, :type)) end)
-    end
-
     test "makes empty strings nil" do
       [_survey, response] = read_in_survey(1)
       [first | [second|_]] = response
