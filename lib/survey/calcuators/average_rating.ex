@@ -2,8 +2,8 @@ defmodule Survey.Calculators.AverageRating do
   alias Survey.Calculators.Calculator
   @behaviour Calculator
 
-  def calculate(%Survey{response: []}), do: results(:error)
-  def calculate(%Survey{survey: qs, response: rs}) do
+  def calculate(%Survey{responses: []}), do: results(:error)
+  def calculate(%Survey{questions: qs, responses: rs}) do
     rs
     |> Calculator.submitted
     |> Calculator.questions_with_responses(qs)

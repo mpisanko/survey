@@ -15,7 +15,7 @@ defmodule Survey.Calculators.AverageRatingTest do
                    %{submitted_at: "abc", responses: [5, "Bob", 6, "Brissy", "baz"]},
                    %{submitted_at: "abc", responses: [7, "Kate", 8, "Perth", "fizz"]},
                   ]
-      assert AverageRating.calculate(%Survey{response: responses, survey: questions}) ==
+      assert AverageRating.calculate(%Survey{responses: responses, questions: questions}) ==
         %{type: :average_rating, result: [%{average: 4.0, responses: [1, 3, 5, 7], type: "ratingquestion"},
                                           %{average: 5.0, responses: [2, 4, 6, 8], type: "ratingquestion"}]}
     end
@@ -29,7 +29,7 @@ defmodule Survey.Calculators.AverageRatingTest do
                    %{submitted_at: nil, responses: [5, 6, nil]},
                    %{submitted_at: "abc", responses: [7, 8, "fizz"]},
                   ]
-      assert AverageRating.calculate(%Survey{response: responses, survey: questions}) ==
+      assert AverageRating.calculate(%Survey{responses: responses, questions: questions}) ==
         %{type: :average_rating, result: [%{average: 4.0, responses: [1, 7], type: "ratingquestion"},
                                           %{average: 6.0, responses: [4, 8], type: "ratingquestion"}]}
     end
@@ -43,7 +43,7 @@ defmodule Survey.Calculators.AverageRatingTest do
                    %{responses: [5, 6, nil]},
                    %{responses: [7, 8, "fizz"]},
                   ]
-      assert AverageRating.calculate(%Survey{response: responses, survey: questions}) ==
+      assert AverageRating.calculate(%Survey{responses: responses, questions: questions}) ==
         %{type: :average_rating, result: []}
     end
   end

@@ -1,6 +1,6 @@
 defmodule Survey do
 
-  defstruct survey: [], response: []
+  defstruct questions: [], responses: []
 
   def main(args \\ []) do
     args

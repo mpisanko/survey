@@ -5,12 +5,18 @@ defmodule Survey.Parsers.Cli do
   def parse_and_validate(args) do
     with {:ok, flags} <- (args |> parse_options |> validate_options) do
       flags
+      |> map_flags_to_struct
     else
       {:error, :badarg} ->
         error("Please specify --survey and --response with paths pointing to respective files")
       {:error, :missing_files, files} ->
         error("The following files do not exist: #{files}")
     end
+  end
+
+  defp map_flags_to_struct(flags) do
+    [questions: Keyword.get(flags, :survey),
+     responses: Keyword.get(flags, :response)]
   end
 
   defp parse_options(args) do

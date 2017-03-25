@@ -5,11 +5,11 @@ defmodule Survey.Parsers.CliTest do
 
   describe "parse_and_validate" do
     test "it requires precisely two arguments - flags specifying input files" do
-      assert Cli.parse_and_validate(~w[--response ./README.md --survey ./mix.exs]) == [response: "./README.md", survey: "./mix.exs"]
+      assert Cli.parse_and_validate(~w[--response ./README.md --survey ./mix.exs]) == [questions: "./mix.exs", responses: "./README.md"]
     end
 
     test "it requires precisely two arguments - in any order" do
-      assert Cli.parse_and_validate(~w[--survey ./mix.exs --response ./mix.exs]) == [survey: "./mix.exs", response: "./mix.exs"]
+      assert Cli.parse_and_validate(~w[--survey ./mix.exs --response ./mix.exs]) == [questions: "./mix.exs", responses: "./mix.exs"]
     end
 
     test "it raises if required flags are not present" do
@@ -23,7 +23,7 @@ defmodule Survey.Parsers.CliTest do
     end
 
     test "when any other arguments are given it ignores them" do
-      assert Cli.parse_and_validate(~w[--response ./README.md --survey ./mix.exs --extra-args not-welcome]) == [response: "./README.md", survey: "./mix.exs"]
+      assert Cli.parse_and_validate(~w[--response ./README.md --survey ./mix.exs --extra-args not-welcome]) == [questions: "./mix.exs", responses: "./README.md"]
     end
   end
 end
