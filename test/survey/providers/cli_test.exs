@@ -31,7 +31,7 @@ defmodule Survey.Providers.CliTest do
   end
 
   def read_in_survey(i) do
-    %Survey{questions: questions, responses: responses} =  Cli.data(~w[--response test/fixtures/survey-#{i}-responses.csv --survey test/fixtures/survey-#{i}.csv])
+    %Survey{questions: questions, responses: responses} =  Cli.data([responses: "test/fixtures/survey-#{i}-responses.csv", questions: "test/fixtures/survey-#{i}.csv"])
     [questions, responses]
   end
 end

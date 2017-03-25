@@ -1,14 +1,14 @@
 defmodule Survey.Providers.Cli do
 
-  def data(args) do
-    args
-    |> Survey.Parsers.Cli.parse_and_validate
+  def data(flags) do
+    flags
     |> read_from_csv
     |> create_struct
   end
 
   defp read_from_csv(inputs) do
     inputs
+    |> IO.inspect
     |> Enum.map(fn({k, v}) -> {k, v |> File.stream! |> CSV.decode |> Enum.to_list} end)
     |> Enum.into(%{})
   end

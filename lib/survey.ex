@@ -4,6 +4,7 @@ defmodule Survey do
 
   def main(args \\ []) do
     args
+    |> Survey.Parsers.Cli.parse_and_validate
     |> Survey.Providers.Cli.data
     |> calculate_results
     |> present_results
