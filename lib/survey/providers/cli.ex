@@ -27,7 +27,10 @@ defmodule Survey.Providers.Cli do
   @response_fields [:email, :employee_id, :submitted_at]
 
   def create_response(r, qs) do
-    r = Enum.map(r, &nilify/1)
+    r = Enum.map(r, fn
+      "" -> nil
+      o -> o
+    end)
     fixed_fields = Enum.zip(@response_fields, Enum.take(r, 3)) |> Enum.into(%{})
     responses =
       r
@@ -36,9 +39,6 @@ defmodule Survey.Providers.Cli do
       |> Enum.map(&eval_question/1)
     Map.merge(fixed_fields, %{responses: responses})
   end
-
-  defp nilify(""), do: nil
-  defp nilify(o), do: o
 
   defp eval_question({nil, _}), do: nil
   defp eval_question({num, :ratingquestion}) do
