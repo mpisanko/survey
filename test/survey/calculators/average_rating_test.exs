@@ -1,5 +1,5 @@
 defmodule Survey.Calculators.AverageRatingTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   alias Survey.Calculators.AverageRating
   doctest Survey.Calculators.AverageRating
 

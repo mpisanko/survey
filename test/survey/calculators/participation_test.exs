@@ -1,5 +1,5 @@
 defmodule Survey.Calculators.ParticipationTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   alias Survey.Calculators.Participation
   doctest Survey.Calculators.Participation
 

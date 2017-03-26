@@ -1,5 +1,5 @@
 defmodule Survey.Calculators.CalculatorTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   alias Survey.Calculators.Calculator
   doctest Survey.Calculators.Calculator
 
