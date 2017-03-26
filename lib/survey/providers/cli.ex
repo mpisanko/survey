@@ -8,7 +8,6 @@ defmodule Survey.Providers.Cli do
 
   defp read_from_csv(inputs) do
     inputs
-    |> IO.inspect
     |> Enum.map(fn({k, v}) -> {k, v |> File.stream! |> CSV.decode |> Enum.to_list} end)
     |> Enum.into(%{})
   end
