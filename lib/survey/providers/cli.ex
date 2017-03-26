@@ -12,8 +12,7 @@ defmodule Survey.Providers.Cli do
     |> Enum.into(%{})
   end
 
-  defp create_struct(%{questions: [h | qs], responses: rs}) do
-    headers = Enum.map(h, &String.to_atom/1)
+  defp create_struct(%{questions: [headers | qs], responses: rs}) do
     questions = qs |> Enum.map(&create_question(&1, headers))
     q_types = Enum.map(questions, &Map.get(&1, :type))
     responses = Enum.map(rs, &create_response(&1, q_types))
